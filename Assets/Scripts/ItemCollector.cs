@@ -10,10 +10,13 @@ public class ItemCollector : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI strawbsText;
 
+    [SerializeField] private AudioSource collectionSoundEffect;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Strawberry"))
         {
+            collectionSoundEffect.Play();
             Destroy(collision.gameObject);
             strawbs++;
             strawbsText.text = "Strawberries : "+strawbs;

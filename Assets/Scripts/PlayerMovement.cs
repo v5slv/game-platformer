@@ -18,9 +18,10 @@ public class PlayerMovement : MonoBehaviour
 
     private enum MovementState { idle, running, jumping, falling }
 
+    [SerializeField] private AudioSource jumpSoundEffect;
+
     private void Start()
     {
-        Debug.Log("Coucou");
         rigidBody = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
@@ -34,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            jumpSoundEffect.Play();
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
         }
 
