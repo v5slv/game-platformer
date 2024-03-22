@@ -5,10 +5,10 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 
 {
-    private Rigidbody2D rb;
-    private BoxCollider2D coll;
+    private Rigidbody2D rigidBody;
+    private BoxCollider2D collider;
     private SpriteRenderer sprite;
-    private Animator anim;
+    private Animator animator;
 
     [SerializeField] private LayerMask jumpableGround;
 
@@ -18,25 +18,23 @@ public class PlayerMovement : MonoBehaviour
 
     private enum MovementState { idle, running, jumping, falling }
 
-    // Start is called before the first frame update
     private void Start()
     {
         Debug.Log("Coucou");
-        rb = GetComponent<Rigidbody2D>();
-        coll = GetComponent<BoxCollider2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
+        collider = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
-        anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     private void Update()
     {
         dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
+        rigidBody.velocity = new Vector2(dirX * moveSpeed, rigidBody.velocity.y);
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
         }
 
         UpdateAnimation();
@@ -61,20 +59,20 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.idle;
         }
 
-        if(rb.velocity.y > 0.1f)
+        if(rigidBody.velocity.y > 0.1f)
         {
             state = MovementState.jumping;
         }
-        else if (rb.velocity.y < -0.1f)
+        else if (rigidBody.velocity.y < -0.1f)
         {
             state = MovementState.falling;
         }
 
-        anim.SetInteger("state", (int)state);
+        animator.SetInteger("state", (int)state);
     }
 
     private bool IsGrounded()
     {
-        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, 0.1f, jumpableGround);
+        return Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.down, 0.1f, jumpableGround);
     }
 }
